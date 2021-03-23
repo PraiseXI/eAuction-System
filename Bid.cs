@@ -31,9 +31,9 @@ namespace eAuction_System
         {
             auctionID = idNum;
         }
-        public int getBidID()
+        public int getAuctionID()
         {
-            return bidID;
+            return auctionID;
         }
         public void setAmount(int bidAmount)
         {

@@ -13,9 +13,19 @@ namespace eAuction_System
         private double amount;
         private DateTime when;
 
-        public Bid(double Amount)
+        public Bid(int auction, int buyer, double Amount, DateTime date)
         {
+            this.bidID = getBidID();
+            this.auctionID = auction;
+            this.buyerID = buyer;
+            this.amount = Amount;
+            this.when = date;
+        }
 
+        public string displayBid()
+        {
+            string text = "Your bid is #" + bidID + " for auction #" + auctionID + ", for £" + amount + " on " + when + ".";
+            return text;
         }
 
         public void setBidID()
@@ -23,6 +33,7 @@ namespace eAuction_System
             //TODO: Make sure that the random numbers are unique
             bidID = random.Next(1,5000);
         }
+
         public int getBidID()
         {
             return bidID;

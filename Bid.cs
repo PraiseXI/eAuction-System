@@ -33,12 +33,11 @@ namespace eAuction_System
             //TODO: Make sure that the random numbers are unique
             bidID = random.Next(1,5000);
         }
-
         public int getBidID()
         {
             return bidID;
         }
-
+        //-- this is just here for me to visually separate it as I find it hard to look at all at once
         public void setAuctionID(int idNum)
         {
             auctionID = idNum;
@@ -47,9 +46,32 @@ namespace eAuction_System
         {
             return auctionID;
         }
-        public void setAmount(int bidAmount)
+        //--
+        public void setBuyerID(int buyer)
+        {
+            this.buyerID = buyer;
+        }
+        public int getBuyerID()
+        {
+            return buyerID;
+        }
+        //--
+        public void setAmount(double bidAmount)
         {
             amount = bidAmount;
+        }
+        public double getAmount()
+        {
+            return amount;
+        }
+        //--
+        public void setWhen(DateTime when)
+        {
+            this.when = when;
+        }
+        public DateTime getWhen()
+        {
+            return when;
         }
     }
 }

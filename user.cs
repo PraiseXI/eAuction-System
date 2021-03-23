@@ -12,6 +12,14 @@ namespace eAuction_System
         private string username;
         private string password;
 
+        public user(int ID, string name, string psswrd)
+        {
+            this.userID = ID;
+            this.username = name;
+            this.password = psswrd;
+        }
+
+        //function loop to check
         /*
         public bool isAlphabets(string inputString)
         {
@@ -56,6 +64,17 @@ namespace eAuction_System
         public void setPassword(string psswrd)
         {
             password = psswrd;
+        }
+        public bool passwordCheck(string inputpass)
+        {
+            if (inputpass == password)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         public string getPassword()
         {

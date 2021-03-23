@@ -6,7 +6,8 @@ namespace eAuction_System
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("What is your name");
+            //Console.WriteLine();
+
         }
     }
 }

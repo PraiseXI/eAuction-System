@@ -6,7 +6,7 @@ namespace eAuction_System
 {
     public class Bid
     {
-        System.Random random = new System.Random();
+        Random random = new Random();
         private int bidID;
         private int auctionID;
         private int buyerID;
@@ -20,7 +20,8 @@ namespace eAuction_System
 
         public void setBidID()
         {
-            bidID = random.Next();
+            //TODO: Make sure that the random numbers are unique
+            bidID = random.Next(1,5000);
         }
         public int getBidID()
         {
@@ -31,7 +32,7 @@ namespace eAuction_System
         {
             auctionID = idNum;
         }
-        public int getAuctionID()
+        public int getAuctionID(string desc)
         {
             return auctionID;
         }
@@ -40,5 +41,4 @@ namespace eAuction_System
             amount = bidAmount;
         }
     }
-    // private int BidID = rnd.Next(1, 5000);
 }

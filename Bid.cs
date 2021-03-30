@@ -24,7 +24,7 @@ namespace eAuction_System
 
         public string displayBid()
         {
-            string text = "Your bid is #" + bidID + " for auction #" + auctionID + ", for £" + amount + " on " + when + ".";
+            string text = "Your bid is #" + bidID + " for auction #" + auctionID + ", for £" + amount + " on " + DateTime.Now.ToString("dddd, dd MMMM yyyy") + ".";
             return text;
         }
 
@@ -69,6 +69,7 @@ namespace eAuction_System
         {
             this.when = when;
         }
+        //--
         public DateTime getWhen()
         {
             return when;

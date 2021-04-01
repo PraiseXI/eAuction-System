@@ -11,7 +11,7 @@ namespace eAuction_System
         private int auctionID;
         private int buyerID;
         private double amount;
-        private DateTime when;
+        private string when;
 
         public Bid(int auction, int buyer, double Amount, DateTime date)
         {
@@ -19,15 +19,14 @@ namespace eAuction_System
             this.auctionID = auction;
             this.buyerID = buyer;
             this.amount = Amount;
-            this.when = date;
+            string formatdate = date.ToShortDateString();
+            this.when = formatdate;
         }
-
-        public string displayBid()
+        public string display()
         {
             string text = "Your bid is #" + bidID + " for auction #" + auctionID + ", for £" + amount + " on " + DateTime.Now.ToString("dddd, dd MMMM yyyy") + ".";
             return text;
         }
-
         public void setBidID()
         {
             //TODO: Make sure that the random numbers are unique
@@ -58,6 +57,7 @@ namespace eAuction_System
         //--
         public void setAmount(double bidAmount)
         {
+            String.Format("{0:0.00}", bidAmount);
             amount = bidAmount;
         }
         public double getAmount()
@@ -65,12 +65,13 @@ namespace eAuction_System
             return amount;
         }
         //--
-        public void setWhen(DateTime when)
+        public void setWhen(string when)
         {
+            String.Format("{0:0.00}", when);
             this.when = when;
         }
         //--
-        public DateTime getWhen()
+        public string getWhen()
         {
             return when;
         }

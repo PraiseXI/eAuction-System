@@ -25,7 +25,6 @@ namespace eAuction_System
             {
                 this.setPassword(psswrd);
             }
-
         }
 
         //function loop to check

@@ -16,7 +16,16 @@ namespace eAuction_System
         {
             this.userID = ID;
             this.username = name;
-            this.password = psswrd;
+
+            if (emptyCheck(psswrd) == true)
+            {
+                Console.WriteLine("Please enter a valid password");
+            }
+            else
+            {
+                this.password = psswrd;
+            }
+
         }
 
         //function loop to check
@@ -31,12 +40,12 @@ namespace eAuction_System
         }
         */
 
-        public void setuserID()
+        public void setUserID()
         {
             //TODO: Make sure that the random numbers are unique
             userID = random.Next(1, 5000);
         }
-        public int getBidID()
+        public int getUserID()
         {
             return userID;
         }
@@ -44,7 +53,7 @@ namespace eAuction_System
         public void setUsername(string usrnme)
         {
             //TODO: make sure that it is not taken
-            if (String.IsNullOrEmpty(usrnme) == true)
+            if (emptyCheck(usrnme) == true)
             {
                 Console.WriteLine("This isn't a correct username");
                 Console.ReadLine();
@@ -65,9 +74,13 @@ namespace eAuction_System
         {
             password = psswrd;
         }
-        public bool passwordCheck(string inputpass)
+        public string getPassword()
         {
-            if (inputpass == password)
+            return password;
+        }
+        public bool emptyCheck(string input)
+        {
+            if (String.IsNullOrEmpty(input))
             {
                 return true;
             }
@@ -76,9 +89,9 @@ namespace eAuction_System
                 return false;
             }
         }
-        public string getPassword()
+        public bool passCheck(string inputPass)
         {
-            return password;
+            return this.password.Equals(inputPass);
         }
     }
 }

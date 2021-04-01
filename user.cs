@@ -14,8 +14,8 @@ namespace eAuction_System
 
         public user(int ID, string name, string psswrd)
         {
-            this.userID = ID;
-            this.username = name;
+            this.setUserID();
+            this.setUsername(name);
 
             if (emptyCheck(psswrd) == true)
             {
@@ -23,7 +23,7 @@ namespace eAuction_System
             }
             else
             {
-                this.password = psswrd;
+                this.setPassword(psswrd);
             }
 
         }

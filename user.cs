@@ -12,9 +12,9 @@ namespace eAuction_System
         private string username;
         private string password;
 
-        public user(int ID, string name, string psswrd)
+        public user(int idNum, string name, string psswrd)
         {
-            this.setUserID();
+            this.userID = idNum;
             this.setUsername(name);
 
             if (emptyCheck(psswrd) == true)

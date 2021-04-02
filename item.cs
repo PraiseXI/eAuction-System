@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace eAuction_System
 {
-    class item
+    public class item
     {
         Random random = new Random();
         private int itemID;
@@ -33,6 +33,10 @@ namespace eAuction_System
         public string getTitle()
         {
             return title;
+        }
+        public int getID()
+        {
+            return itemID;
         }
     }
 }

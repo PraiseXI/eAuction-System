@@ -8,7 +8,7 @@ namespace eAuction_System
     {
         //list is used as the storage size will constantly change
         private LinkedList<item> itemslist = new LinkedList<item>();
-        public seller (int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd)
+        public seller (int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd))
         {
 
         }

@@ -5,14 +5,14 @@ using System.Text.RegularExpressions;
 
 namespace eAuction_System
 {
-    public class user
+    public class User
     {
         Random random = new Random();
         private int userID;
         private string username;
         private string password;
 
-        public user(int idNum, string name, string psswrd)
+        public User(int idNum, string name, string psswrd)
         {
             this.userID = idNum;
             this.setUsername(name);
@@ -68,7 +68,6 @@ namespace eAuction_System
         {
             return username;
         }
-
         public void setPassword(string psswrd)
         {
             password = psswrd;

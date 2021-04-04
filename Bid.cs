@@ -13,12 +13,12 @@ namespace eAuction_System
         private double amount;
         private string when;
 
-        public Bid(int auction, int buyer, double Amount, DateTime date)
+        public Bid(int auction, int buyer, double amount, DateTime date)
         {
             this.bidID = getBidID();
             this.auctionID = auction;
             this.buyerID = buyer;
-            this.amount = Amount;
+            this.amount = amount;
             string formatdate = date.ToShortDateString();
             this.when = formatdate;
         }

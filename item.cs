@@ -5,14 +5,14 @@ using System.Text.RegularExpressions;
 
 namespace eAuction_System
 {
-    public class item
+    public class Item
     {
         Random random = new Random();
         private int itemID;
         private string title;
         private string description;
 
-        public item (string title, string desc)
+        public Item (string title, string desc)
         {
             this.itemID = random.Next(1, 1000);
             setTitle(title);

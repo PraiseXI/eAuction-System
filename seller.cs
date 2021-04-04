@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace eAuction_System
 {
-    public class seller : user
+    public class Seller : User
     {
         //list is used as the storage size will constantly change
-        private LinkedList<item> itemslist = new LinkedList<item>();
-        public seller (int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd))
+        private ArrayList itemslist = new ArrayList();
+        public Seller (int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd))
         {
 
         }
@@ -16,7 +17,7 @@ namespace eAuction_System
         {
             return text.ToLower();
         }
-        public LinkedList<item> getAllItems()
+        public ArrayList getAllItems()
         {
             return itemslist;
         }

@@ -8,7 +8,7 @@ namespace eAuction_System
     public class Seller : User
     {
         //list is used as the storage size will constantly change
-        private ArrayList itemslist = new ArrayList();
+        private List<Item> itemslist = new List<Item>();
         public Seller (int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd))
         {
 
@@ -17,7 +17,7 @@ namespace eAuction_System
         {
             return text.ToLower();
         }
-        public ArrayList getAllItems()
+        public List<Item> getAllItems()
         {
             return itemslist;
         }

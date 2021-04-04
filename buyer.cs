@@ -8,14 +8,14 @@ namespace eAuction_System
     public class Buyer : User
     {
         // Will be added to this based on Auction ID
-        private ArrayList wonAuctions = new ArrayList();
+        private List<Auction> wonAuctions = new List<Auction>();
         //Linked list will contain all bids that buyer has made
-        private ArrayList buyerBids = new ArrayList();
+        private List<Bid> buyerBids = new List<Bid>();
         public Buyer(int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd))
         {
 
         }
-        public ArrayList getBids()
+        public List<Bid> getBids()
         {
             return buyerBids;
         }

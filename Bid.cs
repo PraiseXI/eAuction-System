@@ -15,7 +15,7 @@ namespace eAuction_System
 
         public Bid(int auction, int buyer, double amount, DateTime date)
         {
-            this.bidID = getBidID();
+            this.bidID = bidID = random.Next(1, 5000);
             this.auctionID = auction;
             this.buyerID = buyer;
             this.amount = amount;

@@ -84,6 +84,11 @@ namespace eAuction_System
             var highest = bidList.Last().getBidID();
             return highest;
         }
+        /*
+        public string displayAuction()
+        {
 
+        }
+        */
     }
 }

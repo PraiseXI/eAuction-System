@@ -12,9 +12,10 @@ namespace eAuction_System
         private string username;
         private string password;
 
-        public User(int idNum, string name, string psswrd)
+        public User(string name, string psswrd)
         {
-            this.userID = idNum;
+            //TODO: make sure random number doesnt already exist: loop
+            this.userID = random.Next(1, 9000);
             this.setUsername(name);
 
             if (emptyCheck(psswrd) == true)

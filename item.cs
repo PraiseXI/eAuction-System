@@ -18,6 +18,15 @@ namespace eAuction_System
             setTitle(title);
             setDescription(desc);
         }
+        public void setItemID()
+        {
+            //TODO: Make sure that the random numbers are unique
+            this.itemID = random.Next(1, 5000);
+        }
+        public int getItemID()
+        {
+            return itemID;
+        }
         public void setDescription(string itemDesc)
         {
             this.description = itemDesc;

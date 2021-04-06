@@ -35,8 +35,7 @@ namespace eAuction_System
         {
             //TODO: Make sure that the random numbers are unique
             this.auctionID = random.Next(1, 5000);
-        }
-        public int getAuctionID()
+        }      public int getAuctionID()
         {
             return auctionID;
         }
@@ -58,8 +57,21 @@ namespace eAuction_System
         }
         public void setCloseDate(DateTime date)
         {
-            this.closingDate = date;
-            //TODO: format date before its been set
+            bool valid = false;
+            do
+            {
+                if ((date - DateTime.Now).TotalDays >= 3)
+                {
+                    valid = true;
+                    this.closingDate = date;
+                }
+                else
+                {
+                    Console.WriteLine("You are allowed to have a closing date 7 or less days that the current date");
+                }
+                //TODO: format date before its been set
+            }
+            while (valid == false);
         }
         public DateTime getClosingDate()
         {

@@ -49,7 +49,6 @@ namespace eAuction_System
         {
             return userID;
         }
-
         public void setUsername(string usrnme)
         {
             //TODO: make sure that it is not taken

@@ -62,27 +62,13 @@ namespace eAuction_System
         {
             return reservePrice;
         }
-        public void setCloseDate(DateTime date)
-        {
-            bool valid = false;
-            do
-            {
-                if ((date - DateTime.Now).TotalDays <= 7)
-                {
-                    valid = true;
-                    this.closingDate = date;
-                }
-                else
-                {
-                    Console.WriteLine("You are allowed to have a closing date 7 or less days that the current date");
-                }
-                //TODO: format date before its been set
-            }
-            while (valid == false);
-        }
         public DateTime getClosingDate()
         {
             return closingDate;
+        }
+        public Item getItem()
+        {
+            return this.auctionItem;
         }
         public Seller getSeller()
         {
@@ -96,24 +82,44 @@ namespace eAuction_System
         {
             this.state = status;
         }
+        public States getState()
+        {
+            return state;
+        }
         public void placeBid(int auctionID, int buyerID, double howMuch, DateTime when)
         {
-            //TODO: checks for amount and datetime
-            new Bid(auctionID, buyerID, howMuch, when);
+            bidList.Add(new Bid(auctionID, buyerID, howMuch, when));
         }
-        public States verifying()
+        public void verifying()
         {
-            return state = States.PENDING;
+            state = States.PENDING;
         }
-        //list should already be arranged as you cannot add a bid unless it is greater than previous, so i just need to select the last element
-        public int getHighestBid()
+        public void startAuctionState()
         {
-            Bid winner = Enumerable.Max(getAllBids(), Comparer.C
-            //TODO: add error check for if there is no bids.
-            //last element should be the highest as it adds higher bids.
-            int highest = bidList.Last().getBuyerID();
+            this.state = States.ACTIVE;
+        }
+        public void endAuctionState()
+        {
+            this.state = States.CLOSED;
+        }
+        //will keep the bid ID of the highest bidder after each bid is placed
+        public void setCurrentHighestBid()
+        {
+        }
+        public Bid getHighestBid()
+        {
+            //put all bids into descending order so the bid with the highest amount highest will be first in the list
+            List<Bid> sortedBids = bidList.OrderByDescending(o => o.getAmount()).ToList();
+
+            Bid highest = sortedBids.First();
             return highest;
         }
+        /*
+        public Buyer getWinner(int highestBidID)
+        {
+            //based on highest bidID, get details of winner
+        }
+        */
         public bool checkCloseDate(DateTime dateToCheck)
         {
             if ((dateToCheck - DateTime.Now).TotalDays <= 7)
@@ -130,24 +136,25 @@ namespace eAuction_System
         {
             return String.Format("This auction is #{0} by {1} for {2}, with a starting price of £{3}, with a reserve price of: £{4}, which closes on: {5}", this.auctionItem.getID(), this.auctionSeller, this.auctionItem.getDescription(), this.startingPrice, this.reservePrice, this.closingDate);
         }
-        /*
+         // TODO: put in system class
         public bool checkBidAmount(double amount)
         {
-            //20% upper, 10% lower
+            bool valid;
             double lower = startingPrice + (startingPrice / 10);
             double upper = startingPrice + (startingPrice / 20);
-            // IEnumerable<double> range = Enumerable.Range(lower, upper).Contains();
-            foreach (Bid b in bidList)
+
+            if (amount >= lower && amount <= upper)
             {
-            if (IEnumerable<double> range = Enumerable.Range(lower, upper).Contains( ))
-                {
-
-                }
+                valid = true;
             }
-
-
+            else
+            {
+                valid = false;
+            }
+            return valid;
         }
-        */
+
+
 
 
 

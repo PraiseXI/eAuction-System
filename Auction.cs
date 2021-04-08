@@ -60,7 +60,7 @@ namespace eAuction_System
             bool valid = false;
             do
             {
-                if ((date - DateTime.Now).TotalDays >= 3)
+                if ((date - DateTime.Now).TotalDays <= 7)
                 {
                     valid = true;
                     this.closingDate = date;

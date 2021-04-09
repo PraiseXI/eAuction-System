@@ -14,7 +14,7 @@ namespace eAuction_System
 
         public User(string name, string psswrd)
         {
-            //TODO: make sure random number doesnt already exist: loop
+            //TODO: make sure random number doesn't already exist: loop
             this.userID = random.Next(1, 9000);
             this.setUsername(name);
 

@@ -6,5 +6,7 @@ namespace eAuction_System
 {
     class AuctionSystem
     {
+        //checkbid amount method
+        //check state of auction -  if(getState().Equals(States.ACTIVE))
     }
 }

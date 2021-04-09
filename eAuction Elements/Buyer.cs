@@ -11,7 +11,7 @@ namespace eAuction_System
         private List<Auction> wonAuctions = new List<Auction>();
         //Linked list will contain all bids that buyer has made
         private List<Bid> buyerBids = new List<Bid>();
-        public Buyer(int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd))
+        public Buyer(string usrname, string passwrd) : base(convertToLower(usrname), convertToLower(passwrd))
         {
 
         }
@@ -23,11 +23,5 @@ namespace eAuction_System
         {
             return text.ToLower();
         }
-        /*
-            foreach (Bid x in buyerBids)
-            {
-                if  (x.getBuyerID == )
-            }
-        */
     }
 }

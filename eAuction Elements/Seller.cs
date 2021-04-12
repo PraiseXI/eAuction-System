@@ -9,7 +9,7 @@ namespace eAuction_System
     {
         //list is used as the storage size will constantly change
         private List<Item> itemslist = new List<Item>();
-        public Seller (int num, string usrname, string passwrd) : base(num, convertToLower(usrname), convertToLower(passwrd))
+        public Seller (string usrname, string passwrd) : base(convertToLower(usrname), convertToLower(passwrd))
         {
 
         }

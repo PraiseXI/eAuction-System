@@ -4,19 +4,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace eAuction_System.Main
+namespace eAuction_System
 {
     public class Menus
     {
         //headers just for visual purposes
-        public void mainheader()
+        public void mainHeader()
         {
-            Console.WriteLine();
             Console.WriteLine("+---------------------------------+");
             Console.WriteLine("|     Welcome to the eAuction     |");
             Console.WriteLine("+---------------------------------+");
         }
-        public void sellerheader()
+        public void sellerHeader()
         {
             Console.WriteLine();
             Console.WriteLine("+---------------------------------+");
@@ -24,7 +23,7 @@ namespace eAuction_System.Main
             Console.WriteLine("+---------------------------------+");
             Console.WriteLine();
         }
-        public void buyerheader()
+        public void buyerHeader()
         {
             Console.WriteLine();
             Console.WriteLine("+---------------------------------+");
@@ -40,12 +39,21 @@ namespace eAuction_System.Main
             Console.WriteLine("(3) Browse Auctions");
             Console.WriteLine("(0) Exit");
             Console.Write("Enter your choice: \n");
-
-            //Ensures number is an int to save time later down the road
-            while (!int.TryParse(Console.ReadLine(), out int x))
+            //error catch to make sure input is an integer.
+            bool proceed = false;
+            do
             {
-                Console.Write("Your option must be a number (0-3) try again: ");
-            }
+                try
+                {
+                    int.TryParse(Console.ReadLine(), out int x);
+                    proceed = true;
+                }
+                catch
+                {
+                    Console.WriteLine("Please enter a number input");
+                    proceed = false;
+                }
+            } while (proceed == false);
 
             int caseSwitch = Convert.ToInt32(Console.ReadLine());
             switch (caseSwitch)
@@ -59,12 +67,13 @@ namespace eAuction_System.Main
                 case 3:
                     return 3;
                 default:
+                    Console.WriteLine("Your option must be a number (0-3) try again: ");
                     return caseSwitch;
             }
         }
         public int buyerMenu()
         {
-            this.buyerheader();
+            this.buyerHeader();
             Console.WriteLine("-- Please Make A Selection --\n");
             Console.WriteLine("(1) Browse All Active Auctions");
             Console.WriteLine("(2) Bid on Item");
@@ -98,7 +107,7 @@ namespace eAuction_System.Main
         }
         public int sellerMenu()
         {
-            this.sellerheader();
+            this.sellerHeader();
             Console.WriteLine("-- Please Make A Selection --\n");
             Console.WriteLine("(1) Sell an Item (Create Auction)");
             Console.WriteLine("(2) View Auction Bids");

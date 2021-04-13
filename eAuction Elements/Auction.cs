@@ -10,7 +10,6 @@ namespace eAuction_System
     {
         Random random = new Random();
         List<Bid> bidList = new List<Bid>();
-        // maybe implement a stack for the bidID of the bids, instead of storing whole bid
         // it would check to see if the bid amount is high enough, then it would get the bidID and add it to the stack
         //so that at the end you would just need to take the top value and then get the bid info based on that bidID4
         private int auctionID;

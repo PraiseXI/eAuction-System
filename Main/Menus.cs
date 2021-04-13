@@ -39,10 +39,9 @@ namespace eAuction_System
             Console.WriteLine("(3) Browse Auctions");
             Console.WriteLine("(0) Exit");
             Console.Write("Enter your choice: \n");
+
             //error catch to make sure input is an integer.
             bool proceed = false;
-            do
-            {
                 try
                 {
                     int.TryParse(Console.ReadLine(), out int x);
@@ -53,7 +52,6 @@ namespace eAuction_System
                     Console.WriteLine("Please enter a number input");
                     proceed = false;
                 }
-            } while (proceed == false);
 
             int caseSwitch = Convert.ToInt32(Console.ReadLine());
             switch (caseSwitch)
@@ -140,7 +138,6 @@ namespace eAuction_System
             }
         }
         /*
-         * I was going to put it in a separate method however this just complicates it.
         public void inputChecker()
         {
 

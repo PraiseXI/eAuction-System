@@ -6,17 +6,11 @@ namespace eAuction_System
     {
         static void Main(string[] args)
         {
-            //menu loop
-            /*
-             * for the menu option
-             * TODO: make sure there is a do while loop for the menu inputs
-            if (caseSwitch == 0)
+            while(true)
             {
-                Console.WriteLine("Now Exiting....");
-                Thread.Sleep(3000);
-                Environment.Exit(0);
+                AuctionSystem a = new AuctionSystem();
+                a.start();
             }
-            */
 
         }
     }

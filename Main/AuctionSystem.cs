@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 
 namespace eAuction_System
 {
     public class AuctionSystem
     {
+        //TODO: add option to delete account if logged in
         private List<User> allUsers = new List<User>();
         string usrnme = null;
         string psswrd = null;
@@ -37,7 +39,7 @@ namespace eAuction_System
                         login();
                         break;
                     case 2:
-                        Console.WriteLine("2");
+                        createAccount();
                         break;
                     case 3:
                         Console.WriteLine("3");
@@ -58,6 +60,7 @@ namespace eAuction_System
 
         private void login()
         {
+            Console.WriteLine("\n-- Log in --\n");
             //validations for non empty input
             while (String.IsNullOrEmpty(usrnme))
             {
@@ -93,7 +96,6 @@ namespace eAuction_System
                         }
                     }
                 }
-
             }
             catch (Exception e)
             {
@@ -101,7 +103,65 @@ namespace eAuction_System
             }
 
         }
+        private void createAccount()
+        {
+            string newUsrnme = null;
+            string newPass = null;
+            string acctype = null;
+            bool proceed = false;
 
+            Console.WriteLine("\n-- Create Account --\n");
+            do
+            {
+                Console.Write("Which account would you like to create (Seller/Buyer): ");
+                acctype = Console.ReadLine().ToLower();
+
+            } while (string.IsNullOrEmpty(acctype) || isAlphabet(acctype) == false || acctype != "seller" && acctype != "buyer"); //makes sure appropriate input.
+            Console.WriteLine("\n --These entries are *case sensitive*-- \n");
+
+            while (String.IsNullOrEmpty(newUsrnme))
+            {
+                //TODO: make sure that it is not taken
+                Console.Write("Please enter your username: ");
+                newUsrnme = Console.ReadLine();
+                if (findUsername(newUsrnme) != null)
+                {
+                    Console.Write("This username is already taken try again: ");
+                    newUsrnme = null;
+                }
+
+            }
+            Console.WriteLine("Username set");
+
+            do
+            {
+                //TODO: mask  password for security measures
+                Console.Write("Please enter your password: ");
+                newPass = Console.ReadLine();
+                /*
+                while (true)
+                {
+                    var key = System.Console.ReadKey(true);
+                    if (key.Key == ConsoleKey.Enter)
+                        break;
+                    newPass += key.KeyChar;
+                }
+                */
+            } while (String.IsNullOrEmpty(newPass));
+            Console.WriteLine("Password set");
+
+            if (acctype == "buyer")
+            {
+                allUsers.Add(new Buyer(newUsrnme, newPass));
+            }
+            if (acctype == "seller")
+            {
+                allUsers.Add(new Seller(newUsrnme, newPass));
+            }
+            Console.WriteLine("\n Your account has been successfully created");
+
+        }
+        //saves time instead of doing a foreach through every user
         private User findUsername(string username)
         {
             foreach (User user in allUsers)
@@ -113,14 +173,13 @@ namespace eAuction_System
             }
             return null;
             /*
-             * an alternative way of checking if suser
+             * an alternative way of checking if user
             if (user is Seller)
             {
 
             }
             */
         }
-
         //return a Seller with specified username if there is one, otherwise returns null
         public Seller getSellerByName(String username)
         {
@@ -140,7 +199,6 @@ namespace eAuction_System
             }
             return null;
         }
-
         //return a Buyer with specified username if there is one, otherwise returns null
         public Buyer getBuyerByName(String username)
         {
@@ -171,6 +229,14 @@ namespace eAuction_System
             {
                 return false;
             }
+        }
+        public bool isAlphabet(string inputString)
+        {
+            Regex r = new Regex("^[a-zA-Z ]+$");
+            if (r.IsMatch(inputString))
+                return true;
+            else
+                return false;
         }
 
     }

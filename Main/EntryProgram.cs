@@ -6,9 +6,10 @@ namespace eAuction_System
     {
         static void Main(string[] args)
         {
-            while(true)
+            AuctionSystem a = new AuctionSystem();
+            a.systemSetup();
+            while (true)
             {
-                AuctionSystem a = new AuctionSystem();
                 a.buyerMenu();
             }
 

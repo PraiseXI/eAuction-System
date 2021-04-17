@@ -9,7 +9,7 @@ namespace eAuction_System
             while(true)
             {
                 AuctionSystem a = new AuctionSystem();
-                a.startMenu();
+                a.buyerMenu();
             }
 
         }

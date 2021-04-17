@@ -4,11 +4,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
+
 namespace eAuction_System
 {
     public class AuctionSystem
     {
         private List<User> allUsers = new List<User>();
+        string usrnme = null;
+        string psswrd = null;
+        User activeUser = null;
+        string activeMenu = "main";
         public void start()
         {
             int response;
@@ -29,7 +34,7 @@ namespace eAuction_System
                         Environment.Exit(0);
                         break;
                     case 1:
-                        Console.WriteLine("1");
+                        login();
                         break;
                     case 2:
                         Console.WriteLine("2");
@@ -53,12 +58,47 @@ namespace eAuction_System
 
         private void login()
         {
-            Console.Write("Please enter your username: ");
-            string usrnme = Console.ReadLine();
-            Console.Write("Please enter your password: ");
-            string psswrd = Console.ReadLine();
-
+            //validations for non empty input
+            while (String.IsNullOrEmpty(usrnme))
+            {
+                Console.Write("Please enter your username: ");
+                usrnme = Console.ReadLine();
+            }
             User user = findUsername(usrnme);
+            try
+            {
+                if (user == null) //checks if user exists
+                {
+                    //TODO: redirect them to create an account if doesn't exist
+                    Console.WriteLine("\n ** This User does not exist **");
+                }
+                else
+                {
+                    while (String.IsNullOrEmpty(psswrd))
+                    {
+                        Console.Write("Please enter your password: ");
+                        psswrd = Console.ReadLine();
+                    }
+                    if (findUsername(usrnme).passCheck(psswrd)) //checks password alongside username
+                    {
+                        activeUser = user;
+                        //checks to see if seller or buyer to change menu
+                        if (activeUser is Seller)
+                        {
+                            activeMenu = "Seller";
+                        }
+                        else if (activeUser is Buyer)
+                        {
+                            activeMenu = "Buyer";
+                        }
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: " + e);
+            }
 
         }
 
@@ -72,6 +112,66 @@ namespace eAuction_System
                 }
             }
             return null;
+            /*
+             * an alternative way of checking if suser
+            if (user is Seller)
+            {
+
+            }
+            */
         }
+
+        //return a Seller with specified username if there is one, otherwise returns null
+        public Seller getSellerByName(String username)
+        {
+            foreach (User user in allUsers)
+            {
+                if (user.getUsername().Equals(username))
+                {
+                    try
+                    {
+                        return (Seller)user;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Error: " + e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        //return a Buyer with specified username if there is one, otherwise returns null
+        public Buyer getBuyerByName(String username)
+        {
+            foreach (User user in allUsers)
+            {
+                if (user.getUsername().Equals(username))
+                {
+                    try
+                    {
+                        return (Buyer)user;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Error: " + e);
+                    }
+                }
+            }
+            return null;
+
+        }
+        public bool emptyCheck(string input)
+        {
+            if (String.IsNullOrEmpty(input))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }

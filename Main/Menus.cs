@@ -35,7 +35,7 @@ namespace eAuction_System
         {
             Console.WriteLine("\n-- Please Make A Selection --\n");
             Console.WriteLine("(1) Log In");
-            Console.WriteLine("(2) Set Up an Account");
+            Console.WriteLine("(2) Create an Account");
             Console.WriteLine("(3) Browse Auctions");
             Console.WriteLine("(0) Exit \n");
             Console.Write("Enter your choice: ");

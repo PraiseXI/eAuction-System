@@ -33,41 +33,17 @@ namespace eAuction_System
         }
         public int mainMenu()
         {
-            Console.WriteLine("-- Please Make A Selection --\n");
+            Console.WriteLine("\n-- Please Make A Selection --\n");
             Console.WriteLine("(1) Log In");
             Console.WriteLine("(2) Set Up an Account");
             Console.WriteLine("(3) Browse Auctions");
-            Console.WriteLine("(0) Exit");
-            Console.Write("Enter your choice: \n");
+            Console.WriteLine("(0) Exit \n");
+            Console.Write("Enter your choice: ");
 
-            //error catch to make sure input is an integer.
-            bool proceed = false;
-                try
-                {
-                    int.TryParse(Console.ReadLine(), out int x);
-                    proceed = true;
-                }
-                catch
-                {
-                    Console.WriteLine("Please enter a number input");
-                    proceed = false;
-                }
+            string input = Console.ReadLine();
 
-            int caseSwitch = Convert.ToInt32(Console.ReadLine());
-            switch (caseSwitch)
-            {
-                case 0:
-                    return 0;
-                case 1:
-                    return 1;
-                case 2:
-                    return 2;
-                case 3:
-                    return 3;
-                default:
-                    Console.WriteLine("Your option must be a number (0-3) try again: ");
-                    return caseSwitch;
-            }
+            int output = inputChecker(input);
+            return output;
         }
         public int buyerMenu()
         {
@@ -80,28 +56,11 @@ namespace eAuction_System
             Console.WriteLine("(0) Exit");
             Console.Write("Enter your choice: \n");
 
-            //Ensures number is an int to save time later down the road
-            while (!int.TryParse(Console.ReadLine(), out int x))
-            {
-                Console.Write("Your option must be a number (0-4) try again: ");
-            }
+            string input = Console.ReadLine();
 
-            int caseSwitch = Convert.ToInt32(Console.ReadLine());
-            switch (caseSwitch)
-            {
-                case 0:
-                    return 0;
-                case 1:
-                    return 1;
-                case 2:
-                    return 2;
-                case 3:
-                    return 3;
-                case 4:
-                    return 4;
-                default:
-                    return caseSwitch;
-            }
+            int output = inputChecker(input);
+            return output;
+
         }
         public int sellerMenu()
         {
@@ -114,34 +73,31 @@ namespace eAuction_System
             Console.WriteLine("(0) Exit:");
             Console.Write("Enter your choice: \n");
 
-            //Ensures number is an int to save time later down the road
-            while (!int.TryParse(Console.ReadLine(), out int x))
-            {
-                Console.Write("Your option must be a number (0-4) try again: ");
-            }
-
-            int caseSwitch = Convert.ToInt32(Console.ReadLine());
-            switch (caseSwitch)
-            {
-                case 0:
-                    return 0;
-                case 1:
-                    return 1;
-                case 2:
-                    return 2;
-                case 3:
-                    return 3;
-                case 4:
-                    return 4;
-                default:
-                    return caseSwitch;
-            }
+            string input = Console.ReadLine();
+            int output = inputChecker(input);
+            return output;
         }
-        /*
-        public void inputChecker()
+
+        //saves time down the road as makes sure input is in the correct format
+        public int inputChecker(string numToCheck)
         {
-
+            //error catch to make sure input is an integer.
+            bool valid = false;
+            int output;
+            do
+            {
+                if (int.TryParse(numToCheck, out output))
+                {
+                    valid = true;
+                }
+                else
+                {
+                    Console.Write("Please enter a number input: ");
+                    numToCheck = Console.ReadLine();
+                }
+            } while (valid == false);
+            return output;
         }
-        */
+
     }
 }

@@ -114,6 +114,7 @@ namespace eAuction_System
             return highest;
         }
         /*
+         * TODO
         public Buyer getWinner(int highestBidID)
         {
             //based on highest bidID, get details of winner
@@ -133,7 +134,7 @@ namespace eAuction_System
         }
         public string displayAuction()
         {
-            return String.Format("This auction is #{0} by {1} for {2}, with a starting price of £{3}, with a reserve price of: £{4}, which closes on: {5}", this.auctionItem.getID(), this.auctionSeller, this.auctionItem.getDescription(), this.startingPrice, this.reservePrice, this.closingDate);
+            return String.Format("auction #{0} by {1} for {2}, with a starting price of £{3}, with a reserve price of: £{4}, which closes on: {5}", this.auctionItem.getID(), this.auctionSeller, this.auctionItem.getDescription(), this.startingPrice, this.reservePrice, this.closingDate);
         }
          // TODO: put in system class
         public bool checkBidAmount(double amount)

@@ -33,6 +33,7 @@ namespace eAuction_System
         }
         public int mainMenu()
         {
+            Console.WriteLine("\n-- Main Menu --");
             Console.WriteLine("\n-- Please Make A Selection --\n");
             Console.WriteLine("(1) Log In");
             Console.WriteLine("(2) Create an Account");
@@ -48,7 +49,7 @@ namespace eAuction_System
         public int buyerMenu()
         {
             this.buyerHeader();
-            Console.WriteLine("-- Please Make A Selection --\n");
+            Console.WriteLine("\n-- Please Make A Selection --\n");
             Console.WriteLine("(1) Browse All Active Auctions");
             Console.WriteLine("(2) Bid on Item");
             Console.WriteLine("(3) View All Auctions You've Won");

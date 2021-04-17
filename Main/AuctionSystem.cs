@@ -166,7 +166,22 @@ namespace eAuction_System
         {
             Console.WriteLine("\n -- All ACTIVE AUCTIONS -- \n");
             List<Auction> activeAuctions = new List<Auction>();
-
+            foreach (Auction auc in activeAuctions)
+            {
+                if(auc.getState().Equals(States.ACTIVE))
+                {
+                    activeAuctions.Add(auc);
+                }
+            }
+            if (activeAuctions.Count == 0)
+            {
+                Console.WriteLine("--There is no active auctions currently, please try again at another time");
+            }
+            foreach (Auction auction in activeAuctions)
+            {
+                Console.WriteLine(auction.displayAuction());
+            }
+            //TODO: redirect to whether they want to bid on auction
     }
         private User findUsername(string username)
         {

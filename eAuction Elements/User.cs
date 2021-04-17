@@ -51,18 +51,9 @@ namespace eAuction_System
         }
         public void setUsername(string usrnme)
         {
-            //TODO: make sure that it is not taken
-            if (emptyCheck(usrnme) == true)
-            {
-                Console.WriteLine("This isn't a correct username");
-                Console.ReadLine();
-            }
-            else
-            {
                 username = usrnme;
                 Console.WriteLine("Username set! Hi {0}", username);
                 Console.ReadLine();
-            }
         }
         public string getUsername()
         {

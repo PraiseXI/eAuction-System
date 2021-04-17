@@ -9,7 +9,7 @@ namespace eAuction_System
     {
         // Will be added to this based on Auction ID
         private List<Auction> wonAuctions = new List<Auction>();
-        //Linked list will contain all bids that buyer has made
+        //Linked list will contain all bids that buyer has made - *might not need*
         private List<Bid> buyerBids = new List<Bid>();
         public Buyer(string usrname, string passwrd) : base(convertToLower(usrname), convertToLower(passwrd))
         {

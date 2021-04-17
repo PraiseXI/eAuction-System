@@ -162,6 +162,12 @@ namespace eAuction_System
 
         }
         //saves time instead of doing a foreach through every user
+        private void browseAuctions()
+        {
+            Console.WriteLine("\n -- All ACTIVE AUCTIONS -- \n");
+            List<Auction> activeAuctions = new List<Auction>();
+
+    }
         private User findUsername(string username)
         {
             foreach (User user in allUsers)

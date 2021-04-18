@@ -10,7 +10,7 @@ namespace eAuction_System
             a.systemSetup();
             while (true)
             {
-                a.sellerMenu();
+                a.startMenu();
             }
 
         }

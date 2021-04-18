@@ -4,8 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Text.RegularExpressions;
-
-
 namespace eAuction_System
 {
     public class AuctionSystem
@@ -34,12 +32,11 @@ namespace eAuction_System
         public void startMenu()
         {
             int response;
-            Menus menu = new Menus();
 
-            menu.mainHeader();
+            mainHeader();
             do
             {
-                response = menu.mainMenu();
+                response = mainMenu();
 
                 int caseSwitch = response;
 
@@ -65,13 +62,12 @@ namespace eAuction_System
                 }
             } while (response > 3 || response != 0);
         }
-        public void buyerMenu()
+        public void buyerMenuChoices()
         {
             int response;
-            Menus menu = new Menus();
             do
             {
-                response = menu.buyerMenu();
+                response = buyerMenu();
 
                 int caseSwitch = response;
 
@@ -105,13 +101,12 @@ namespace eAuction_System
                 }
             } while (response > 4 || response != 0);
         }
-        public void sellerMenu()
+        public void sellerMenuChoices()
         {
             int response;
-            Menus menu = new Menus();
             do
             {
-                response = menu.sellerMenu();
+                response = sellerMenu();
 
                 int caseSwitch = response;
 
@@ -163,29 +158,44 @@ namespace eAuction_System
                 {
                     //TODO: redirect them to create an account if doesn't exist
                     Console.WriteLine("\n ** This User does not exist **");
+                    startMenu();
+                    // ask them if they want to createAccount();
                 }
                 else
                 {
-                    while (String.IsNullOrEmpty(psswrd))
+                    do
                     {
-                        Console.Write("Please enter your password: ");
-                        psswrd = Console.ReadLine();
-                    }
-                    if (findUsername(usrnme).passCheck(psswrd)) //checks password alongside username
-                    {
-                        activeUser = user;
-                        //checks to see if seller or buyer to change menu and to cast it to the current, so you know who is logged in
-                        if (activeUser is Seller)
+                        while (String.IsNullOrEmpty(psswrd))
                         {
-                            activeMenu = "Seller";
-                            currentSeller = (Seller)activeUser;
+                            Console.Write("Please enter your password: ");
+                            psswrd = Console.ReadLine();
                         }
-                        else if (activeUser is Buyer)
+                        if (findUsername(usrnme).passCheck(psswrd)) //checks password alongside username
                         {
-                            activeMenu = "Buyer";
-                            currentBuyer = (Buyer)activeUser;
+                            activeUser = user;
+                            //checks to see if seller or buyer to change menu and to cast it to the current, so you know who is logged in
+                            if (activeUser is Seller)
+                            {
+                                activeMenu = "Seller";
+                                currentSeller = (Seller)activeUser;
+                                Console.WriteLine("\n -- Welcome {0}! -- \n", currentSeller.getUsername());
+                                Thread.Sleep(1000);
+                                sellerMenuChoices();
+                            }
+                            else if (activeUser is Buyer)
+                            {
+                                activeMenu = "Buyer";
+                                currentBuyer = (Buyer)activeUser;
+                                Console.WriteLine("\n -- Welcome {0}! -- \n", currentBuyer.getUsername());
+                                Thread.Sleep(1000);
+                                buyerMenuChoices();
+                            }
                         }
-                    }
+                        else if (!findUsername(usrnme).passCheck(psswrd))
+                        {
+                            Console.WriteLine("Incorrect password.");
+                        }
+                    } while (!findUsername(usrnme).passCheck(psswrd));
                 }
             }
             catch (Exception e)
@@ -238,18 +248,18 @@ namespace eAuction_System
                 */
             } while (String.IsNullOrEmpty(newPass));
             Console.WriteLine("Password set");
-
             if (acctype == "buyer")
             {
                 allUsers.Add(new Buyer(newUsrnme, newPass));
+                Console.WriteLine("Your account has been successfully created");
+                login();
             }
-            if (acctype == "seller")
+            else if (acctype == "seller")
             {
                 allUsers.Add(new Seller(newUsrnme, newPass));
+                Console.WriteLine("Your account has been successfully created, please enter");
+                login();
             }
-            Console.WriteLine("\n Your account has been successfully created");
-            Thread.Sleep(2000);
-            login();
         }
         //saves time instead of doing a foreach through every user
         private void browseAuctions()
@@ -404,7 +414,7 @@ namespace eAuction_System
                     start = Convert.ToDouble(Console.ReadLine());
                     Console.Write("Please enter the reserve price: £");
                     reserve = Convert.ToDouble(Console.ReadLine());
-                    Console.Write("Please enter the date you would like the auction to close (dd/mm/yyyy): ");
+                    Console.Write("Please enter the date you would like the auction to close (dd/mm/yyyy 00:00): ");
                     closing = Convert.ToDateTime(Console.ReadLine());
                     //checkclosedate
                     itemToSell = findItem(title);
@@ -593,6 +603,96 @@ namespace eAuction_System
                 return false;
             }
             //TODO: format date before its been set
+        }
+        public int inputChecker(string numToCheck)
+        {
+            //error catch to make sure input is an integer.
+            bool valid = false;
+            int output;
+            do
+            {
+                if (int.TryParse(numToCheck, out output))
+                {
+                    valid = true;
+                }
+                else
+                {
+                    Console.Write("Please enter a number input: ");
+                    numToCheck = Console.ReadLine();
+                }
+            } while (valid == false);
+            return output;
+        }
+
+        //Menus & Headers//
+        public void mainHeader()
+        {
+            Console.WriteLine("+---------------------------------+");
+            Console.WriteLine("|     Welcome to the eAuction     |");
+            Console.WriteLine("+---------------------------------+");
+        }
+        public void sellerHeader()
+        {
+            Console.WriteLine();
+            Console.WriteLine("+---------------------------------+");
+            Console.WriteLine("|           Seller Menu           |");
+            Console.WriteLine("+---------------------------------+");
+            Console.WriteLine();
+        }
+        public int mainMenu()
+        {
+            Console.WriteLine("\n-- Main Menu --");
+            Console.WriteLine("\n-- Please Make A Selection --\n");
+            Console.WriteLine("(1) Log In");
+            Console.WriteLine("(2) Create an Account");
+            Console.WriteLine("(3) Browse Auctions");
+            Console.WriteLine("(0) Exit \n");
+            Console.Write("Enter your choice: ");
+
+            string input = Console.ReadLine();
+
+            int output = inputChecker(input);
+            return output;
+        }
+        public void buyerHeader()
+        {
+            Console.WriteLine();
+            Console.WriteLine("+---------------------------------+");
+            Console.WriteLine("|            Buyer Menu           |");
+            Console.WriteLine("+---------------------------------+");
+            Console.WriteLine();
+        }
+        public int buyerMenu()
+        {
+            buyerHeader();
+            Console.WriteLine("\n-- Please Make A Selection --\n");
+            Console.WriteLine("(1) Browse All Active Auctions");
+            Console.WriteLine("(2) Bid on Item");
+            Console.WriteLine("(3) View All Auctions You've Won");
+            Console.WriteLine("(4) Log Out");
+            Console.WriteLine("(0) Exit");
+            Console.Write("Enter your choice: \n");
+
+            string input = Console.ReadLine();
+
+            int output = inputChecker(input);
+            return output;
+
+        }
+        public int sellerMenu()
+        {
+            sellerHeader();
+            Console.WriteLine("-- Please Make A Selection --\n");
+            Console.WriteLine("(1) Sell an Item (Create Auction)"); //add each auction to list in system
+            Console.WriteLine("(2) View Auction Bids");
+            Console.WriteLine("(3) Verify Pending Auction");
+            Console.WriteLine("(4) Log Out");
+            Console.WriteLine("(0) Exit:");
+            Console.Write("Enter your choice: \n");
+
+            string input = Console.ReadLine();
+            int output = inputChecker(input);
+            return output;
         }
     }
 }

@@ -91,13 +91,13 @@ namespace eAuction_System
         }
         public void verifying()
         {
-            state = States.PENDING;
+            this.state = States.PENDING;
         }
-        public void startAuctionState()
+        public void startAuction()
         {
             this.state = States.ACTIVE;
         }
-        public void endAuctionState()
+        public void endAuction()
         {
             this.state = States.CLOSED;
         }

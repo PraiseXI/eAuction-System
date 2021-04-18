@@ -136,10 +136,9 @@ namespace eAuction_System
         {
             return String.Format("auction #{0} by {1} for {2}, with a starting price of £{3}, with a reserve price of: £{4}, which closes on: {5}", this.auctionItem.getID(), this.auctionSeller, this.auctionItem.getDescription(), this.startingPrice, this.reservePrice, this.closingDate);
         }
-         // TODO: put in system class
         public bool checkBidAmount(double amount)
         {
-            bool valid;
+            bool valid = false;
             double lower = startingPrice + (startingPrice / 10);
             double upper = startingPrice + (startingPrice / 20);
 
@@ -153,10 +152,5 @@ namespace eAuction_System
             }
             return valid;
         }
-
-
-
-
-
     }
 }

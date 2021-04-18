@@ -19,8 +19,8 @@ namespace eAuction_System
         private Item auctionItem;
         private Seller auctionSeller;
         private States state;
-        private Buyer winner;
-        private Bid highestBid;
+        private Bid highestBid = null;
+        private int winnerID = 0;
 
         public Auction(double startPrice, double reservePrice, DateTime closingDate, Item auctionitem, Seller auctionSeller)
         {
@@ -110,16 +110,19 @@ namespace eAuction_System
             //put all bids into descending order so the bid with the highest amount highest will be first in the list
             List<Bid> sortedBids = bidList.OrderByDescending(o => o.getAmount()).ToList();
 
-            Bid highest = sortedBids.First();
-            return highest;
+            highestBid = sortedBids.First();
+            return highestBid;
         }
-        /*
-         * TODO
-        public Buyer getWinner(int highestBidID)
+        public int getWinnerID()
         {
+            if (checkFinalBid(getHighestBid()) == true)
+            {
+                winnerID = getHighestBid().getBuyerID();
+                return winnerID;
+            }
+            return winnerID;
             //based on highest bidID, get details of winner
         }
-        */
         public bool checkCloseDate(DateTime dateToCheck)
         {
             if ((dateToCheck - DateTime.Now).TotalDays <= 7)
@@ -130,7 +133,7 @@ namespace eAuction_System
             {
                 return false;
             }
-                //TODO: format date before its been set
+            //TODO: format date before its been set
         }
         public string displayAuction()
         {
@@ -151,6 +154,16 @@ namespace eAuction_System
                 valid = false;
             }
             return valid;
+        }
+        private bool checkFinalBid(Bid highest)
+        {
+            bool good = false;
+            double howMuch = getHighestBid().getAmount();
+            if (howMuch >= this.reservePrice)
+            {
+                good = true;
+            }
+            return good;
         }
     }
 }

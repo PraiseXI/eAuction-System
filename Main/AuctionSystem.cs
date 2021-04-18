@@ -13,11 +13,14 @@ namespace eAuction_System
         //TODO: press a button at any time to go back to main menu
         //TODO: add option to delete account if logged in
         //TODO: implement a way for seller to view bid history
-        private List<User> allUsers = new List<User>();
+        //TODO: implement 'cancel' so that it takes them to previous menu/main menu
+        public List<User> allUsers = new List<User>();
+        List<Auction> allAuctions = new List<Auction>();
         List<Auction> activeAuctions = new List<Auction>();
+        public List<Item> allItems = new List<Item>();
         string usrnme = null;
         string psswrd = null;
-        User activeUser = null;
+        User activeUser = null; //way to see if logged in or not
         string activeMenu = "main";
         Seller currentSeller;
         Buyer currentBuyer;
@@ -25,9 +28,8 @@ namespace eAuction_System
 
         public void systemSetup()
         {
-            populateAuctions();
+            populateActiveAuctions();
             //will put all serialisation and adding users
-
         }
         public void startMenu()
         {
@@ -89,12 +91,12 @@ namespace eAuction_System
                         break;
                     case 3:
                         //view all won auctions
-                        browseAuctions();
+                        viewWonAuctions();
                         break;
                     case 4:
                         //log out
                         Console.WriteLine("Logging out...");
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1000);
                         startMenu();
                         break;
                     default:
@@ -103,7 +105,47 @@ namespace eAuction_System
                 }
             } while (response > 4 || response != 0);
         }
-        //checkbid amount method
+        public void sellerMenu()
+        {
+            int response;
+            Menus menu = new Menus();
+            do
+            {
+                response = menu.sellerMenu();
+
+                int caseSwitch = response;
+
+                switch (caseSwitch)
+                {
+                    case 0:
+                        Console.WriteLine("Now Exiting....Goodbye");
+                        Thread.Sleep(2000);
+                        Environment.Exit(0);
+                        break;
+                    case 1:
+                        //Sell an Item (Create Auction)
+                        createAuction();
+                        break;
+                    case 2:
+                        //View Auction Bids
+                        bidOnItem();
+                        break;
+                    case 3:
+                        //Verify Pending Auction
+                        viewWonAuctions();
+                        break;
+                    case 4:
+                        //Log Out
+                        Console.WriteLine("Logging out...");
+                        Thread.Sleep(1000);
+                        startMenu();
+                        break;
+                    default:
+                        Console.WriteLine("Your option must be a number (0-4) try again.");
+                        break;
+                }
+            } while (response > 4 || response != 0);
+        }
         //check state of auction -  if(getState().Equals(States.ACTIVE))
         private void login()
         {
@@ -150,14 +192,12 @@ namespace eAuction_System
             {
                 Console.WriteLine("Error: " + e);
             }
-
         }
         private void createAccount()
         {
             string newUsrnme = null;
             string newPass = null;
             string acctype = null;
-            bool proceed = false;
 
             Console.WriteLine("\n-- Create Account --\n");
             do
@@ -228,7 +268,7 @@ namespace eAuction_System
         }
         private void bidOnItem()
         {
-            bool exists = false;
+            bool redo = true;
             int aucID = 0;
             double amount = 0;
             string response = "";
@@ -257,38 +297,45 @@ namespace eAuction_System
                     }
                     aucID = value;
 
+                    if (findAuctionByID(aucID) == null)
+                    {
+                        Console.WriteLine("An auction with that ID number doesn't exist please try again");
+                    }
+                    else
+                    {
+                        Console.WriteLine(findAuctionByID(aucID).displayAuction());
+                    }
+                } while (findAuctionByID(aucID) == null);
+
+                do
+                {
+                    Console.Write("Amount you want to bid for: £");
+                    while (!int.TryParse(Console.ReadLine(), out value))
+                    {
+                        Console.WriteLine("That is not a valid response please try again.");
+                        Console.Write("Please enter the amount you would like to bid: £");
+                    }
+                    amount = value;
 
                     foreach (Auction auc in activeAuctions)
                     {
                         if (auc.getAuctionID() == aucID)
                         {
-                            exists = true;
-                            break;
+                            if (auc.checkBidAmount(amount))
+                            {
+                                auc.placeBid(aucID, currentBuyer.getUserID(), amount, currDate.Date);
+                                Console.WriteLine("--Your bid has been successfully placed");
+                                Console.WriteLine("Your ID number for your bid is: {0} please note this down and remember it for future reference", findBid(aucID, amount).getBidID());
+                                redo = false;
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("There is a upper and lower bidding increment of 20% and 10% of the starting price, your bid does not meet that.");
+                            }
                         }
                     }
-                    if (exists == false)
-                    {
-                        Console.WriteLine("An auction with that ID number doesn't exist please try again");
-                    }
-                } while (exists == false);
-
-
-                Console.Write("Amount you want to bid for: £");
-                while (!int.TryParse(Console.ReadLine(), out value))
-                {
-                    Console.WriteLine("That is not a valid response please try again.");
-                    Console.Write("Please enter the amount you would like to bid: £");
-                }
-                amount = value;
-
-                foreach (Auction auc in activeAuctions)
-                {
-                    if (amount >= auc.getStartPrice())
-                    {
-                        auc.placeBid(aucID, currentBuyer.getUserID(), amount, currDate.Date);
-                        Console.WriteLine("--Your bid has been successfully placed");
-                    }
-                }
+                } while (redo == true);
             }
             else
             {
@@ -299,23 +346,152 @@ namespace eAuction_System
             }
         }
         //will get specific Bid details from amount and buyerID
-        private Bid findBid(double amt)
+        private void viewWonAuctions()
+        {
+            List<Auction> wonAucs = new List<Auction>();
+            while (activeUser == null)
+            {
+                Console.WriteLine("You are currently not logged in, please log in now");
+                login();
+            }
+            foreach (Auction auc in activeAuctions)
+            {
+                if (auc.getWinnerID() == activeUser.getUserID())
+                {
+                    wonAucs.Add(auc);
+                }
+            }
+            foreach (Auction aucs in wonAucs)
+            {
+                Console.WriteLine("ID: " + aucs.getItem().getItemID() + ", " + aucs.getItem().getDescription() + ". Seller: " + aucs.getSeller());
+            }
+        }
+        private void createAuction()
+        {
+            bool repeat = true;
+            string response = null;
+            string title = null;
+            string desc = null;
+            double start;
+            double reserve;
+            DateTime closing;
+            Item itemToSell;
+            Seller aucSeller;
+            Auction currAuc;
+
+            Console.WriteLine("\n -- You first need to create an item to list -- \n");
+            Console.WriteLine("\n -- Create your item -- \n");
+            //TODO: check if it already exists
+            do
+            {
+                Console.WriteLine("Please enter the name of the item: ");
+                title = Console.ReadLine();
+                if (findItem(title) == null)
+                {
+                    repeat = false;
+                    do
+                    {
+                        Console.WriteLine("Please enter the description of the item: ");
+                    } while (!String.IsNullOrEmpty(desc));
+                    desc = Console.ReadLine();
+                    allItems.Add(new Item(title, desc));
+                    Console.WriteLine("\n -- Your item has been created -- \n");
+
+                    Console.WriteLine("\n -- Create an auction -- \n");
+
+                    //TODO: Validation for input types
+                    Console.Write("Please enter the starting price: £");
+                    start = Convert.ToDouble(Console.ReadLine());
+                    Console.Write("Please enter the reserve price: £");
+                    reserve = Convert.ToDouble(Console.ReadLine());
+                    Console.Write("Please enter the date you would like the auction to close (dd/mm/yyyy): ");
+                    closing = Convert.ToDateTime(Console.ReadLine());
+                    //checkclosedate
+                    itemToSell = findItem(title);
+                    aucSeller = (Seller)activeUser;
+
+                    allAuctions.Add(new Auction(start, reserve, closing, itemToSell, aucSeller));
+
+                    currAuc = findAuctionByItem(findItem(title)); //sets state to pending
+
+                    do
+                    {
+                        do
+                        {
+                            Console.WriteLine("Verify auction? [Y/N]");
+                            response = Console.ReadLine().ToUpper();
+                        } while (String.IsNullOrEmpty(response));
+
+                        if (response == "Y")
+                        {
+                            currAuc.startAuction();
+                            Console.WriteLine("\n -- Auction Started -- \n");
+                        }
+                        else if (response == "N")
+                        {
+                            currAuc.verifying();
+                            Console.WriteLine("Auction created but not started, you can verify the auction though the seller menu");
+                        }
+                        else
+                        {
+                            Console.WriteLine("That was an incorrect input try again");
+                        }
+                    } while (response != "Y" && response != "N");
+                    populateActiveAuctions();
+                    sellerMenu();
+                }
+                else
+                {
+                    Console.WriteLine("An item with this title already exists, please re-enter.");
+                }
+            } while (String.IsNullOrEmpty(title) || repeat == true);
+
+        }
+        private Bid findBid(int aucID, double amt)
         {
             foreach (Auction auc in activeAuctions)
             {
-                foreach (Bid bid in auc.getAllBids())
+                if (auc.getAuctionID() == aucID)
                 {
-                    if (bid.getAmount() == amt)
+                    foreach (Bid bid in auc.getAllBids())
                     {
-                        return bid;
+                        if (bid.getAmount() == amt)
+                        {
+                            return bid;
+                        }
                     }
-
                 }
             }
+            return null;
         }
-        private void populateAuctions()
+        //put into a method to help re
+        private Auction findAuctionByItem(Item item)
+        {
+            foreach (Auction auc in allAuctions)
+            {
+                if (auc.getItem() == item)
+                {
+                    return auc;
+                }
+                break;
+            }
+            return null;
+        }
+        private Auction findAuctionByID(int idNum)
         {
             foreach (Auction auc in activeAuctions)
+            {
+                if (auc.getAuctionID() == idNum)
+                {
+                    return auc;
+                }
+                break;
+            }
+            return null;
+        }
+        private void populateActiveAuctions()
+        {
+            foreach (Auction auc in allAuctions)
             {
                 if (auc.getState().Equals(States.ACTIVE))
                 {
@@ -333,13 +509,22 @@ namespace eAuction_System
                 }
             }
             return null;
-            /*
-             * an alternative way of checking if user
-            if (user is Seller)
+        }
+        private Item findItem(string title)
+        {
+            Item toReturn = null;
+            foreach (Item thing in allItems)
             {
-
+                if (thing.getTitle() == title)
+                {
+                    toReturn = thing;
+                }
+                else
+                {
+                    Console.WriteLine(thing.getTitle());
+                }
             }
-            */
+            return toReturn;
         }
         //return a Seller with specified username
         private Seller getSellerByName(String username)
@@ -348,14 +533,11 @@ namespace eAuction_System
             {
                 if (user.getUsername().Equals(username))
                 {
-                    try
+                    if (user is Seller)
                     {
                         return (Seller)user;
                     }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Error: " + e);
-                    }
+
                 }
             }
             return null;
@@ -367,13 +549,9 @@ namespace eAuction_System
             {
                 if (user.getUsername().Equals(username))
                 {
-                    try
+                    if (user is Buyer)
                     {
                         return (Buyer)user;
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Error: " + e);
                     }
                 }
             }
@@ -403,6 +581,18 @@ namespace eAuction_System
         private void menuControl()
         {
 
+        }
+        public bool checkCloseDate(DateTime dateToCheck)
+        {
+            if ((dateToCheck - DateTime.Now).TotalDays <= 7)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            //TODO: format date before its been set
         }
     }
 }

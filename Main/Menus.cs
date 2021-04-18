@@ -67,7 +67,7 @@ namespace eAuction_System
         {
             this.sellerHeader();
             Console.WriteLine("-- Please Make A Selection --\n");
-            Console.WriteLine("(1) Sell an Item (Create Auction)");
+            Console.WriteLine("(1) Sell an Item (Create Auction)"); //add each auction to list in system
             Console.WriteLine("(2) View Auction Bids");
             Console.WriteLine("(3) Verify Pending Auction");
             Console.WriteLine("(4) Log Out");

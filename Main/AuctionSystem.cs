@@ -34,10 +34,13 @@ namespace eAuction_System
             populateActiveAuctions();
             //deseralising from file
 
-            using (Stream fileStream = File.OpenRead("UserData.txt"))
+            if (File.Exists(@"UserData.txt"))
             {
-                BinaryFormatter deserializer = new BinaryFormatter();
-                allUsers = (List<User>)deserializer.Deserialize(fileStream);
+                using (Stream fileStream = File.OpenRead("UserData.txt"))
+                {
+                    BinaryFormatter deserializer = new BinaryFormatter();
+                    allUsers = (List<User>)deserializer.Deserialize(fileStream); //populates user list with file data if exists
+                }
             }
         }
         public void startMenu()
@@ -262,12 +265,13 @@ namespace eAuction_System
             Console.WriteLine("Password set");
             if (acctype == "buyer")
             {
-                lock(allUsers) //makes sure no multi threading
+                lock (allUsers) //makes sure no multi threading
                 {
                     allUsers.Add(new Buyer(newUsrnme, newPass));
                 }
 
                 //writes to binary file
+                //* put when exiting program
                 using (Stream fileStream = File.Open("UserData.txt", FileMode.Create))
                 {
                     BinaryFormatter serializer = new BinaryFormatter();

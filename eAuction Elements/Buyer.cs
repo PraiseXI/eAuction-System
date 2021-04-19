@@ -2,10 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
+
 
 namespace eAuction_System
 {
-    public class Buyer : User
+    [Serializable()]
+    public class Buyer : User, ISerializable
     {
         // Will be added to this based on Auction ID
         private List<Auction> wonAuctions = new List<Auction>();
@@ -22,6 +28,20 @@ namespace eAuction_System
         private static string convertToLower(string text)
         {
             return text.ToLower();
+        }
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("User ID Number", userID);
+            info.AddValue("Username", username);
+            info.AddValue("Password", password);
+        }
+        //To deserialize data
+        public Buyer(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            userID = info.GetString("User ID Number");
+            username = info.GetString("Username");
+            password = info.GetString("Password");
+
         }
     }
 }

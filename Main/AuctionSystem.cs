@@ -4,6 +4,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
+using System.Runtime.Serialization;
+
 namespace eAuction_System
 {
     public class AuctionSystem
@@ -27,7 +32,13 @@ namespace eAuction_System
         public void systemSetup()
         {
             populateActiveAuctions();
-            //will put all serialisation and adding users
+            //deseralising from file
+
+            using (Stream fileStream = File.OpenRead("UserData.txt"))
+            {
+                BinaryFormatter deserializer = new BinaryFormatter();
+                allUsers = (List<User>)deserializer.Deserialize(fileStream);
+            }
         }
         public void startMenu()
         {
@@ -144,6 +155,7 @@ namespace eAuction_System
         //check state of auction -  if(getState().Equals(States.ACTIVE))
         private void login()
         {
+            usrnme = null;
             Console.WriteLine("\n-- Log in --\n");
             //validations for non empty input
             while (String.IsNullOrEmpty(usrnme))
@@ -165,6 +177,7 @@ namespace eAuction_System
                 {
                     do
                     {
+                        psswrd = null;
                         while (String.IsNullOrEmpty(psswrd))
                         {
                             Console.Write("Please enter your password: ");
@@ -228,7 +241,6 @@ namespace eAuction_System
                     Console.Write("This username is already taken try again: ");
                     newUsrnme = null;
                 }
-
             }
             Console.WriteLine("Username set");
 
@@ -250,13 +262,45 @@ namespace eAuction_System
             Console.WriteLine("Password set");
             if (acctype == "buyer")
             {
-                allUsers.Add(new Buyer(newUsrnme, newPass));
+                lock(allUsers) //makes sure no multi threading
+                {
+                    allUsers.Add(new Buyer(newUsrnme, newPass));
+                }
+
+                //writes to binary file
+                using (Stream fileStream = File.Open("UserData.txt", FileMode.Create))
+                {
+                    BinaryFormatter serializer = new BinaryFormatter();
+                    serializer.Serialize(fileStream, allUsers);
+                }
+
+                /*
+                Stream stream = File.Open("UserData.txt", FileMode.Create);
+                IFormatter formatter = new BinaryFormatter();
+
+                // Send the object data to the file
+                formatter.Serialize(stream, allUsers);
+                stream.Close();
+
+
+                //@".data\\UserData.xml **relative path**
+                using (Stream fs = new FileStream(@"C:\Users\prais\Documents\Programming\Uni\Semester 2 - Object Oriented\eAuction System\data\\UserData.xml",
+                    FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<User>));
+                    serializer.Serialize(fs, allUsers);
+                }
+                */
+
                 Console.WriteLine("Your account has been successfully created");
                 login();
             }
             else if (acctype == "seller")
             {
-                allUsers.Add(new Seller(newUsrnme, newPass));
+                lock (allUsers)
+                {
+                    allUsers.Add(new Seller(newUsrnme, newPass));
+                }
                 Console.WriteLine("Your account has been successfully created, please enter");
                 login();
             }
@@ -358,22 +402,63 @@ namespace eAuction_System
         //will get specific Bid details from amount and buyerID
         private void viewWonAuctions()
         {
+            string input = null;
             List<Auction> wonAucs = new List<Auction>();
             while (activeUser == null)
             {
                 Console.WriteLine("You are currently not logged in, please log in now");
                 login();
             }
-            foreach (Auction auc in activeAuctions)
+            if (allAuctions.Count != 0) //sees if theres any auctions
             {
-                if (auc.getWinnerID() == activeUser.getUserID())
+                foreach (Auction auc in allAuctions)
                 {
-                    wonAucs.Add(auc);
+                    if (auc.getWinnerID() == activeUser.getUserID()) //checks if user is winner
+                    {
+                        wonAucs.Add(auc);
+                    }
+                }
+                if (wonAucs.Count == 0)
+                {
+                    Console.WriteLine("\n -- Sorry, you have not won any auctions:(-- \n");
+                    Thread.Sleep(1000);
+                    buyerMenu();
+                }
+                else
+                {
+                    Console.WriteLine("Here are the auctions you have won: ");
+                    foreach (Auction aucs in wonAucs)
+                    {
+                        Console.WriteLine("ID: " + aucs.getItem().getItemID() + ", " + aucs.getItem().getDescription() + ". Seller: " + aucs.getSeller());
+                    }
+                    do
+                    {
+                        do
+                        {
+                            Console.Write("Finished? [Y/N]: ");
+                            input = Console.ReadLine().ToUpper();
+                        } while (String.IsNullOrEmpty(input));
+
+                        if (input == "Y")
+                        {
+                            buyerMenu();
+                        }
+                        else if (input == "N")
+                        {
+                            Thread.Sleep(9000);
+                        }
+                        else
+                        {
+                            Console.WriteLine("That was an incorrect input try again");
+                        }
+                    } while (input != "Y" && input != "N");
                 }
             }
-            foreach (Auction aucs in wonAucs)
+            else
             {
-                Console.WriteLine("ID: " + aucs.getItem().getItemID() + ", " + aucs.getItem().getDescription() + ". Seller: " + aucs.getSeller());
+                Console.WriteLine("\n -- There are no auctions in the system!-- \n");
+                Thread.Sleep(1000);
+                buyerMenu();
             }
         }
         private void createAuction()
@@ -511,14 +596,17 @@ namespace eAuction_System
         }
         private User findUsername(string username)
         {
-            foreach (User user in allUsers)
+            lock (allUsers)
             {
-                if (user.getUsername().Equals(username))
+                foreach (User user in allUsers)
                 {
-                    return user;
+                    if (user.getUsername().Equals(username))
+                    {
+                        return user;
+                    }
                 }
+                return null;
             }
-            return null;
         }
         private Item findItem(string title)
         {
@@ -555,17 +643,20 @@ namespace eAuction_System
         //return a Buyer with specified username
         private Buyer getBuyerByName(String username)
         {
-            foreach (User user in allUsers)
+            lock (allUsers)
             {
-                if (user.getUsername().Equals(username))
+                foreach (User user in allUsers)
                 {
-                    if (user is Buyer)
+                    if (user.getUsername().Equals(username))
                     {
-                        return (Buyer)user;
+                        if (user is Buyer)
+                        {
+                            return (Buyer)user;
+                        }
                     }
                 }
+                return null;
             }
-            return null;
 
         }
         private bool emptyCheck(string input)
@@ -623,6 +714,13 @@ namespace eAuction_System
             } while (valid == false);
             return output;
         }
+        /*
+         * I want to find a way to put it in a method
+        private void SerializeObjects()
+        {
+
+        }
+        */
 
         //Menus & Headers//
         public void mainHeader()

@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 using System.Linq;
 
 namespace eAuction_System
 {
-    public class Item
+    [Serializable()]
+    public class Item : ISerializable
     {
         Random random = new Random();
         private int itemID;
@@ -50,6 +51,24 @@ namespace eAuction_System
         public int getID()
         {
             return itemID;
+        }
+
+        //SerializationInfo info holds key value pairs
+        //To serialize data
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Item ID", itemID);
+            info.AddValue("Title", title);
+            info.AddValue("Item Description", description);
+        }
+        //To deserialize data
+        public Item(SerializationInfo info, StreamingContext context)
+        {
+            itemID = (int)info.GetValue("Item ID", typeof(int));
+            title = (string)info.GetValue("Title", typeof(string));
+            description = (string)info.GetValue("Item Description", typeof(string));
+
+
         }
     }
 }

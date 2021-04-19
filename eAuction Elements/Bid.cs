@@ -1,21 +1,23 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
+using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 using System.Linq;
 
 namespace eAuction_System
 {
-    public class Bid
+    [Serializable()]
+    public class Bid : ISerializable
     {
         Random random = new Random();
         private int bidID;
         private int auctionID;
         private int buyerID;
         private double amount;
-        private string when;
+        private DateTime when;
 
         public Bid(int auction, int buyer, double amount, DateTime date)
         {
@@ -24,7 +26,7 @@ namespace eAuction_System
             this.buyerID = buyer;
             this.amount = amount;
             string formatdate = date.ToShortDateString();
-            this.when = formatdate;
+            this.when = date;
         }
         public string display()
         {
@@ -69,15 +71,34 @@ namespace eAuction_System
             return amount;
         }
         //--
-        public void setWhen(string when)
+        public void setWhen(DateTime when)
         {
-            String.Format("{0:0.00}", when);
             this.when = when;
         }
         //--
-        public string getWhen()
+        public DateTime getWhen()
         {
             return when;
         }
+        //To serialize data
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Bid ID Number", bidID);
+            info.AddValue("Auction ID Number", auctionID);
+            info.AddValue("Buyer ID Number", buyerID);
+            info.AddValue("Bid Amount", amount);
+            info.AddValue("Bid Date", when);
+        }
+        //To deserialize data
+        public Bid(SerializationInfo info, StreamingContext context)
+        {
+            bidID = (int)info.GetValue("Bid ID Number", typeof(int));
+            auctionID = (int)info.GetValue("Auction ID Number", typeof(int));
+            buyerID = (int)info.GetValue("Buyer ID Number", typeof(int));
+            amount = (double)info.GetValue("Bid Amount", typeof(double));
+            when = (DateTime)info.GetValue("Bid Date", typeof(DateTime));
+
+        }
+
     }
 }

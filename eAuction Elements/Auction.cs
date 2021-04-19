@@ -2,11 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
 
 namespace eAuction_System
 {
-    class Auction
+    [Serializable()]
+    class Auction : ISerializable
     {
         Random random = new Random();
         List<Bid> bidList = new List<Bid>();
@@ -165,5 +169,32 @@ namespace eAuction_System
             }
             return good;
         }
+        //To serialize data
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Auction ID number", auctionID);
+            info.AddValue("Starting Price", startingPrice);
+            info.AddValue("Reserve Price", reservePrice);
+            info.AddValue("Closing Date", closingDate);
+            info.AddValue("Item on Auction", auctionItem);
+            info.AddValue("Auction Seller", auctionSeller);
+            info.AddValue("Auction State", state);
+            info.AddValue("Highest Bid", highestBid);
+            info.AddValue("Winner ID number", winnerID);
+        }
+        //To deserialize data
+        public Auction(SerializationInfo info, StreamingContext context)
+        {
+            auctionID = (int)info.GetValue("Item ID", typeof(int));
+            startingPrice = (double)info.GetValue("Starting Price", typeof(double));
+            reservePrice = (double)info.GetValue("Reserve Price", typeof(double));
+            closingDate = (DateTime)info.GetValue("Closing DateD", typeof(DateTime));
+            auctionItem = (Item)info.GetValue("Item on Auction", typeof(Item));
+            auctionSeller = (Seller)info.GetValue("Auction Seller", typeof(Seller));
+            state = (States)info.GetValue("Auction State", typeof(States));
+            highestBid = (Bid)info.GetValue("Highest Bid", typeof(Bid));
+            winnerID = (int)info.GetValue("Winner ID number", typeof(int));
+        }
+
     }
 }

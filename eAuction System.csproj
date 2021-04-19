@@ -6,4 +6,14 @@
     <RootNamespace>eAuction_System</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ServiceModel.Web">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\LiveShare\Agent\System.ServiceModel.Web.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

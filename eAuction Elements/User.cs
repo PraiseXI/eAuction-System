@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 using System.Linq;
 
 namespace eAuction_System
 {
-    public class User
+    [Serializable()]
+    public class User : ISerializable
     {
         Random random = new Random();
-        private int userID;
-        private string username;
-        private string password;
+        public int userID;
+        public string username;
+        public string password;
 
         public User(string name, string psswrd)
         {
@@ -31,7 +32,6 @@ namespace eAuction_System
                 this.setPassword(psswrd);
             }
         }
-
         //function loop to check
         /*
         public bool isAlphabets(string inputString)
@@ -43,12 +43,6 @@ namespace eAuction_System
                 return false;
         }
         */
-
-        public void setUserID()
-        {
-            //TODO: Make sure that the random numbers are unique
-            userID = random.Next(1, 5000);
-        }
         public int getUserID()
         {
             return userID;
@@ -86,5 +80,21 @@ namespace eAuction_System
         {
             return this.password.Equals(inputPass);
         }
+        //To serialize data
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("User ID Number", userID);
+            info.AddValue("Username", username);
+            info.AddValue("Password", password);
+        }
+        //To deserialize data
+        public User(SerializationInfo info, StreamingContext context)
+        {
+            userID = (int)info.GetValue("User ID Number", typeof(int));
+            username = (string)info.GetValue("Username", typeof(string));
+            password = (string)info.GetValue("Password", typeof(string));
+
+        }
+
     }
 }
